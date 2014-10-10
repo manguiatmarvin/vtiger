@@ -961,8 +961,30 @@ class Users extends CRMEntity {
 				$qparams[] = $this->column_fields['user_hash'];
 			}
 
-            $sql1 = "insert into $table_name ($column) values(". generateQuestionMarks($qparams) .")";
-            $this->db->pquery($sql1, $qparams);
+           // $sql1 = "insert into $table_name ($column) values(". generateQuestionMarks($qparams) .")";
+            
+
+            // added  smtp ---Marvin
+            $smtp = $_SESSION['smtp'];
+            // 			$this->column_fields['server'] = $smtp['server'];
+            // 			$this->column_fields['server_username'] = $smtp["username"];
+            // 			$this->column_fields['server_password'] = $smtp["password"];
+            // 			$this->column_fields['smtp_auth'] =  1;
+            $qparamsX = $qparams;
+            $qparamsX[] = $smtp['server'];
+            $qparamsX[] = $smtp["username"];
+            $qparamsX[] = $smtp["password"];
+            $qparamsX[] = 1;
+
+            $columnX = $column;
+            $columnX .= ',server';
+            $columnX .= ',server_username';
+            $columnX .= ',server_password';
+            $columnX .= ',smtp_auth';
+            	
+            $sql1 = "insert into $table_name ($columnX) values(". generateQuestionMarks($qparamsX).")";
+            
+            $this->db->pquery($sql1, $qparamsX);
         }
     }
 

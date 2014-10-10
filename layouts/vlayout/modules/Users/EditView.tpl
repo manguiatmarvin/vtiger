@@ -23,6 +23,7 @@
 			<input type="hidden" name="relationOperation" value="{$IS_RELATION_OPERATION}" />
 		{/if}
 		{assign var=WIDTHTYPE value=$USER_MODEL->get('rowheight')}
+		
 		<div class="contentHeader row-fluid">
 		{assign var=SINGLE_MODULE_NAME value='Single_'|cat:$MODULE}
 			<span class="span8">
@@ -34,6 +35,7 @@
 			</span>
 			<span class="span4">
 				<span class="pull-right" style="padding-right: 15px">
+				    <button id ="smtp-btn001" class="btn btn-success" onclick="javascript:window.open('/vtigercrm/dev45462036/addsmtpserver.php', '', 'width=640, height=480, resizable=no, ');return false;" ><strong>Setup SMTP Server</strong></button>
 					<button class="btn btn-success" type="submit"><strong>{vtranslate('LBL_SAVE', $MODULE)}</strong></button>
 					<a class="cancelLink" type="reset" onclick="javascript:window.history.back();">{vtranslate('LBL_CANCEL', $MODULE)}</a>
 				</span>
@@ -78,6 +80,7 @@
 					<td class="fieldValue {$WIDTHTYPE}" {if $FIELD_MODEL->get('uitype') eq '19'} colspan="3" {assign var=COUNTER value=$COUNTER+1} {/if}>
 						{include file=$FIELD_MODEL->getUITypeModel()->getTemplateName()|@vtemplate_path:$MODULE}
 					</td>
+					
 				{/foreach}
 				</tr>
 				{/if}

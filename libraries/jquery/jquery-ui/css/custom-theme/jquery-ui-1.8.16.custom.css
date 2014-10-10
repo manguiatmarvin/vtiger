@@ -1318,3 +1318,11 @@ div.wijmo-wijmenu .wijmo-wijmenu-child .wijmo-wijmenu-text
   filter: none;
 }
 
+#smtp-btn001{
+	 position: absolute;
+width: 220px;
+height: 29px;
+margin-top: 89px;
+margin-left: -248px;
+}
+
