@@ -24,13 +24,7 @@ if(isset($_SESSION['smtp'])){
 <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css" />
 <!-- font Awesome -->
 <link href="css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-<!-- Ionicons -->
-<link href="css/ionicons.min.css" rel="stylesheet" type="text/css" />
-<!-- Morris chart -->
-<link href="css/morris/morris.css" rel="stylesheet" type="text/css" />
-<!-- jvectormap -->
-<link href="css/jvectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet"
-	type="text/css" />
+
 <!-- Date Picker -->
 <link href="css/datepicker/datepicker3.css" rel="stylesheet"
 	type="text/css" />
@@ -56,6 +50,8 @@ if(isset($_SESSION['smtp'])){
 <!-- Bootstrap -->
 <script src="js/bootstrap.min.js" type="text/javascript"></script>
 
+
+
 <script>
           $(document).ready(function(){
               /*btn submit*/ 
@@ -63,40 +59,10 @@ if(isset($_SESSION['smtp'])){
                   //prevent Default functionality
                   e.preventDefault();
 
-                  if($('#serverselect-server').val()=="0"){
-                     alert("select a server");
-                     $(this).focus();
-                      return;
-                     
-                   }else if($('#smtp_username').val()==""){
-                	   alert("username required");
-                       $(this).focus();
-                       return;
-                       
-                    }else if($('#smtp_password').val()==""){
-                	   alert("password required");
-                       $(this).focus();
-                       return;
-                    }
-                  
-                  /*get the server value from textbox*/
-                  var server = $("#smtp-server").val();
-
-                  /*if not on textbox server was set using presents*/
-                  if(server==""){
-                	  server = $('#hidden-smtp-server').val();
-                   }
-
-                  /* fist load server no value use the default value google*/
-                  if(server==""){
-                      server = $("select option:selected").val();
-                   }
-                  
-                  
                   $.ajax({
                 	  type: "POST",
                 	  url: "process_smtp.php",
-                	  data: {"server":server, 
+                	  data: {"server":$('#txt-smtp-server').val(), 
                     	      "username":$('#smtp_username').val(), 
                     	      "password":$('#smtp_password').val()},
                 	  dataType: 'json',
@@ -123,26 +89,112 @@ if(isset($_SESSION['smtp'])){
                 	  $("#smtp-server").val("");
                 	  $('#hidden-smtp-server').val($(this).val());
                 	  $("#smtp-server").fadeOut('fast');
-                    
                       }
               });
+
+
+              $(".dropdown-menu li a").click(function(){
+            	  var selText = $(this).text();
+            	  var server = '';
+            	
+                 
+            	 switch(selText) {
+            	    case 'Google':
+            	        server = "ssl://smtp.gmail.com:465";
+            	        break;
+            	    case 'Yahoo':
+            	    	 server = "ssl://smtp.mail.yahoo.com:465";
+             	        break;
+
+            	    case 'Msn':
+           	    	 server = "ssl://smtp.live.com:465";
+            	        break;
+
+            	    case 'Outlook':
+              	    	 server = "tsl://smtp.live.com:587";
+               	        break;
+
+            	    case 'AT&T':
+              	    	 server = "ssl://smtp.att.yahoo.com:465";
+               	        break;
+            	        
+            	    default:
+            	        server = '';
+            	}
+   
+            	 $('#btn-select-smtp').html(selText+' <span class="caret"></span>');
+            	 $('#txt-smtp-server').val(server).focus();
+            	 if($('#txt-smtp-server').val()!=""){
+                  $('#smtp_username').focus();
+                 }
+                 
+             });
+              
               
           });
         </script>
+
+
+
+<style type="text/css">
+#btn-select-smtp {
+	width: 150px
+}
+</style>
+
 </head>
 <body class="skin-blue">
 	<div class="row well" style="margin: 20px">
 		<div class="box-body" id="smtp-form-body">
+
 			<form method="post" action="<?php echo $_SERVER['PHP_SELF']?>"
 				id="smtp-form">
 
 				<h4>
 					<i class="fa fa-envelope"></i> SMTP Setup
 				</h4>
+				
 				<small>The Outgoing Server settings, also referred as SMTP servers,
 					are used to route vtiger CRM with the email server to send out
 					emails; more specifically, whether emails are sent with or without
-					first authenticating your user information.</small> <br>
+					first authenticating your user information.</small>
+					 <br>
+					 
+
+					 		
+		<div class="panel panel-default">
+  <div class="panel-body">
+
+
+					 <label>Choose SMTP Mail Server * </label><small>(your designated
+						SMTP server for sending your emails)</small> 
+						<br />
+						
+						
+				<div class="input-group">
+					<div class="input-group-btn">
+						<button type="button" class="btn btn-default dropdown-toggle"
+							data-toggle="dropdown" id="btn-select-smtp">
+							SMTP <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu" role="menu">
+							<li class="google"><a href="#">Google</a></li>
+							<li class="yahoo"><a href="#">Yahoo</a></li>
+							<li class="msn"><a href="#">Msn</a></li>
+							<li class="AT&T"><a href="#">AT&T</a></li>
+							<li class="divider"></li>
+							<li class="others"><a href="#">Other</a></li>
+						</ul>
+					</div>
+					<!-- /btn-group -->
+					<input type="text" class="form-control" name="server" id="txt-smtp-server"
+					value="<?php echo htmlspecialchars($smtp['server'])?>">
+				
+				</div>
+				<!-- /input-group -->
+				
+                <br/>
+
 				<div class="form-group">
 					<label>SMTP Username*</label> <small>(your complete email address,
 						this will be your sendout email)</small> <input type="text"
@@ -152,32 +204,12 @@ if(isset($_SESSION['smtp'])){
 				</div>
 				<div class="form-group">
 					<label>SMTP Password *</label><small>(this is your email password)</small>
-					<input type="text" class="form-control" name="password"
+					<input type="text" class="form-control" name="smtp_password"
 						id="smtp_password"
 						value="<?php echo htmlspecialchars($smtp['password'])?>">
 				</div>
 
-				<div class="form-group">
-					<label>Choose SMTP Mail Server * </label> <br> <small>(your
-						designated SMTP server for sending your emails)</small> <br> <select
-						name="serverselect" id="serverselect-server" class="form-control">
-						<option value="0" selected="selected">--Select SMTP--</option>
-						<option value="ssl://smtp.gmail.com:465">Google</option>
-						<option value="ssl://smtp.mail.yahoo.com:465">Yahoo</option>
-						<option value="tsl://smtp.live.com:587">Outlook</option>
-						<option value="ssl://smtp.att.yahoo.com:465">AT&T</option>
-						<option value="ssl://smtp.live.com:465">Hotmail</option>
-						<option value="">Others</option>
-					</select> <input type="hidden" name="hidden-smtp-server"
-						id="hidden-smtp-server"
-						value="<?php echo htmlspecialchars($smtp['server'])?>"> <br> <input
-						type="text" class="form-control" name="server" id="smtp-server"
-						value="<?php echo htmlspecialchars($smtp['server'])?>"
-						style="display: none">
-				</div>
 				<div class="input-group">
-
-
 					<button id="send" class="btn btn-primary edt-profile-btn"
 						style="margin-right: 10px">
 						<i class="fa  fa-save"></i> Save
@@ -187,10 +219,10 @@ if(isset($_SESSION['smtp'])){
 						class="btn btn-primary edt-profile-btn">
 						<i class="fa fa-times"></i> close
 					</button>
-
-
 				</div>
-
+ 
+  </div>
+</div>
 			</form>
 		</div>
 	</div>
