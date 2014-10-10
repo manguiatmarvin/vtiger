@@ -1,12 +1,19 @@
 <?php 
 session_start();
 include_once 'classes/smtp.server.php';
+
 if(!isset( $_SESSION["authenticated_user_id"])){
 	die("<h3>Please login</h3>");
 	exit;
 }
+
+
+if(isset($_SESSION['smtp'])){
+	$smtp =  $_SESSION['smtp'];
+}
+
 //process post
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_THOD"] == "POST") {
 
   $smtp_username = trim($_POST["username"]);
   $smtp_password = trim($_POST["password"]);
@@ -83,11 +90,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </script>
     </head>
     <body class="skin-blue">
-    <?php 
-if(isset($_SESSION['smtp'])){
-$smtp =  ($_SESSION['smtp']);
-
-}?>
     <div class="row well" style="margin:20px">
     <div class="box-body" id="smtp-form-body">
     <form method="post" action="<?php echo $_SERVER['PHP_SELF']?>" id="smtp-form">
