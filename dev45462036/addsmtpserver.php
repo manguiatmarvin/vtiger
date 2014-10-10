@@ -67,6 +67,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 
                 $("#smtp-form-body").fadeOut('slow',function(){
                 	  $("#smtp-form").submit();
+
+                	  window.opener['Users_editView_fieldName_email1'].value = $('#smtp_username').val();
+                	  
                       window.close();
                 	  });
               });
